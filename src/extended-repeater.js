@@ -15,55 +15,72 @@ const { NotImplementedError } = require('../extensions/index.js');
  * => 'STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS'
  *
  */
- function repeater(/* str, options */) {
+ /* function repeater(str, options) {
   throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
-}
-/* function repeater(foo, bar) {
-  if (!foo) {
-    return;
-  }
-  let str = foo;
-  let addStr = '';
-  let strSepr = '+';
-  let addSepr = '';
-  let strCount = 1;
-  let addCount = 1;
+  
+} */
+function repeater(str, options) {
 
-  if (typeof str !== 'string') {
+  if (!str) {
+    str = `${str}`;
+  } else {
     str.toString();
   }
+ 
+  let count = 1;
 
-  if (bar.addition == true && typeof bar.addition !== 'string') {
-    bar.addition.toString();
+  if (options.repeatTimes) {
+    count = options.repeatTimes;
   }
 
-  if (bar.repeatTimes) {
-    strCount = bar.repeatTimes;
+  let sepr = '+';
+  
+  if (str === '') {
+    sepr = '';
+  } else if (options.separator) {
+    sepr = options.separator;
   }
 
-  if (bar.addition) {
-    addStr = bar.addition;
-    addSepr = '|';
-  }
+  // create addition string
+  let addStr = '';
+  let addCount = 1;
+  let addSepr = '|';
 
-  if (bar.additionRepeatTimes) {
-    addCount = bar.additionRepeatTimes;
-  }
-
-  if (bar.separator) {
-    strSepr = bar.separator;
-  }
-
-  if (bar.additionSeparator) {
-    addSepr = bar.additionSeparator;
+  if (options.addition) {
+    addStr = options.addition;
+    addStr.toString();
+  } else if (options.addition === undefined) {
+    addStr = ''
+  } else {
+    addStr = `${options.addition}`
   }
   
-  let result = str + (addStr.repeat(addCount).match(new RegExp(`${addStr}`, 'g')).join(`${addSepr}`));
+  if (options.additionRepeatTimes) {
+    addCount = options.additionRepeatTimes;
+  }
 
-  return result.repeat(strCount).match(new RegExp(`${result}`, 'g')).join(`${strSepr}`);
+  if (addStr === '') {
+    addSepr = '';
+  } else if (options.additionSeparator) {
+    addSepr = options.additionSeparator;
+  }
 
-} */
+  const createStr = (str, sepr, count) => {
+    result = str;
+    for (let i = 0; i < count; i++) {
+      if (++i < count) {
+        result += sepr + str;
+        i--;
+      }
+    }
+
+    return result;
+  }
+
+  let temp =createStr(addStr, addSepr, addCount);
+
+  return  createStr(str + temp, sepr, count);
+}
 module.exports = {
   repeater
 };
